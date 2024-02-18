@@ -284,20 +284,6 @@ always @(posedge PC_CLK or negedge RESET)begin
 	end
 end 
 
-/*DG0040ROM DG0040_MY_ROM(
-.Clk0(F1),
-.ClkEn0(1'b1),
-.AsyncReset0(1'b0),
-.WeRenA(1'b0),
-.AddressA({PS[1:0],PU,PL}),
-.DataOutA(mainROM)
-);*/
-
-/*DG0040_ROMTWO DG0040_MY_ROM(
-.ROM_ADDRESS({PS[1:0],PU,PL}),
-.ROM_DATA(mainROM)
-
-);*/
 
 assign PC_HL = PC_MUX? {PU,PL[5]}:PL[4:0];
 
@@ -471,7 +457,7 @@ end
 wire RAM_WR;
 assign RAM_WR = F2 & RAM_WR_CMD;
 
-DG0045_RAM_256bit DG0040_MY_RAM
+/*DG0045_RAM_256bit DG0040_MY_RAM
 (
 	
    .addr({BU,BL}),
@@ -479,7 +465,7 @@ DG0045_RAM_256bit DG0040_MY_RAM
 	.RAM_clk(RAM_WR),
 	.dout(RAMtoA)
 	
-);
+);*/
 
 wire NRF;
 // SKIP group
