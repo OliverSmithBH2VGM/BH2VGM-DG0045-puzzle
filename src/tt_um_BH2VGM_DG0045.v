@@ -18,7 +18,7 @@ module tt_um_BH2VGM_DG0045(
 );
 
 wire[3:0] KIN; //input 
-	assign KIN = uio_in[3:0]
+	assign KIN = uio_in[3:0];
 
 wire PC_MUX; //input 	
 	assign PC_MUX = uio_in[5];
