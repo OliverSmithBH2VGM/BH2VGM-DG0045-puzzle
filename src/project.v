@@ -41,7 +41,7 @@ DAA = 8'h36,
 LB = 8'h40,
 INCB = 8'h54,
 RZ = 8'h55,
-CMPR = 8'h56,
+//CMPR = 8'h56,
 SMP = 8'h58,
 DECB = 8'h5c,
 SZ = 8'h5d,
@@ -97,7 +97,7 @@ else if(nowCMD[7:2] == 6'b010100) begin NowState<=LB; end
 
 else if(nowCMD == 8'b01010100)begin NowState<=INCB; end
 else if(nowCMD == 8'b01010101)begin NowState<=RZ; end
-else if(nowCMD == 8'h01010110)begin NowState<=CMPR;end
+//else if(nowCMD == 8'h01010110)begin NowState<=CMPR;end
 
 else if(nowCMD[7:2] == 6'b010110)begin NowState<=SMP; end
 else if(nowCMD == 8'b01011100)begin NowState<=DECB; end
@@ -133,7 +133,7 @@ else if(lastCMD[7:4] == 4'b0111) begin LastState<=SSP; end
 else begin LastState<=NOP; end
 end
 
-wire RESET；
+wire RESET;
 	assign RESET = nreset;
 wire CLKF1,CLKF2;
 reg[2:0] clock_devider;
