@@ -554,13 +554,10 @@ begin
 end
 
 assign nL = ~Lreg;
-
-//****G 
-
 endmodule
 
 
-module DG0045_RAM_256bit(
+/*module DG0045_RAM_256bit(
            input   wire RAM_clk  ,
            input   wire[5:0] addr ,
            input   wire[3:0]din  ,
@@ -677,4 +674,4 @@ always @(posedge STK_CLK)begin
 			SPA<= SPA;
 		end
 	end
-endmodule
+endmodule*/
