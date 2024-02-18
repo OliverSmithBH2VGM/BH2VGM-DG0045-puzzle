@@ -166,7 +166,7 @@ assign CLKF2 = (clock_divider[2:1] == 2'b11)? 1'b1:1'b0;
 
 reg CLKEN;
 wire F1,F2;
-always@(negedge CLKF2)
+	always@(negedge CLKF2  or negedge RESET)
 begin
 	if(RESET == 1'b0)begin
 		CLKEN <= 1'b0;
