@@ -391,20 +391,20 @@ end
 
 always @(*)begin   // SMP and RMP classes
 	if(NowState==RMP)begin
-		if(nowCMD[1:0]==2'b00)begin AtoRAM<=(RAMtoA & 4'b1110);end
-		else if(nowCMD[1:0]==2'b01)begin AtoRAM<=(RAMtoA & 4'b1101);end
-		else if(nowCMD[1:0]==2'b10)begin AtoRAM<=(RAMtoA & 4'b1011);end
-		else begin AtoRAM<=(RAMtoA & 4'b0111); end
+		if(nowCMD[1:0]==2'b00)begin AtoRAM=(RAMtoA & 4'b1110);end
+		else if(nowCMD[1:0]==2'b01)begin AtoRAM=(RAMtoA & 4'b1101);end
+		else if(nowCMD[1:0]==2'b10)begin AtoRAM=(RAMtoA & 4'b1011);end
+		else begin AtoRAM=(RAMtoA & 4'b0111); end
 	end
 	else if(NowState==SMP)begin
-		if(nowCMD[1:0]==2'b00)begin AtoRAM<=(RAMtoA | 4'b0001);end
-		else if(nowCMD[1:0]==2'b01)begin AtoRAM<=(RAMtoA | 4'b0010);end
-		else if(nowCMD[1:0]==2'b10)begin AtoRAM<=(RAMtoA | 4'b0100);end
-		else begin AtoRAM<=(RAMtoA | 4'b1000); end
+		if(nowCMD[1:0]==2'b00)begin AtoRAM=(RAMtoA | 4'b0001);end
+		else if(nowCMD[1:0]==2'b01)begin AtoRAM=(RAMtoA | 4'b0010);end
+		else if(nowCMD[1:0]==2'b10)begin AtoRAM=(RAMtoA | 4'b0100);end
+		else begin AtoRAM=(RAMtoA | 4'b1000); end
 	end
 	//else if((NowState==ADC)||(NowState==CADCSC)||(NowState==ADT)||(NowState==DAA)) begin AtoRAM <= ALU_OUT; end
-	else if(NowState==LAM)begin AtoRAM<=nowCMD[3:0]; end
-	else begin AtoRAM <= ACC; end
+	else if(NowState==LAM)begin AtoRAM=nowCMD[3:0]; end
+	else begin AtoRAM = ACC; end
 end
 
 // RAM groups
