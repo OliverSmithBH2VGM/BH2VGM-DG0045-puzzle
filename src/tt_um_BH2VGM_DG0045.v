@@ -609,25 +609,13 @@ output wire PL1NXR0
 	
 	always @(posedge STK_CLK)begin
 		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
-			SPE <= SPD;
-			SPD <= SPC;
-			SPC <= SPB;
-			SPB <= SPA;
-			SPA <= PC;
+			{SPE,SPD,SPC,SPB,SPA} <= {SPD,SPC,SPB,SPA,PC};
 		end
 		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
-			SPE <= SPE;
-			SPD <= SPE;
-			SPC <= SPD;
-			SPB <= SPC;
-			SPA <= SPB;
+			{SPE,SPD,SPC,SPB,SPA} <= {SPE,SPE,SPD,SPC,SPB};
 		end
 		else begin
-			SPE <= SPE;
-			SPD <= SPD;
-			SPC <= SPC;
-			SPB <= SPB;
-			SPA <= SPA;
+			{SPE,SPD,SPC,SPB,SPA} <= {SPE,SPD,SPC,SPB,SPA};
 		end
 	end
 endmodule
