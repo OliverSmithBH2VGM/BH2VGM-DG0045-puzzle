@@ -154,8 +154,9 @@ wire RESET;
 wire CLKF1,CLKF2;
 reg[2:0] clock_devider;
 
-always@(posedge clk)begin
-		clock_devider <= clock_devider + 3'b001;
+always@(posedge clk or negedge RESET)begin
+	if(RESET == 1'b0)begin clock_devider <=3'b000; end
+	else begin clock_devider <= clock_devider + 3'b001; end
 end
 
 assign CLKF1 = (clock_devider[2:1] == 2'b01)? 1'b1:1'b0;
@@ -603,13 +604,61 @@ output wire PL1NXR0
 	
 	always @(posedge STK_CLK)begin
 		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
-			{SPE,SPD,SPC,SPB,SPA} <= {SPD,SPC,SPB,SPA,PC};
+			SPE<= SPD;
 		end
 		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
-			{SPE,SPD,SPC,SPB,SPA} <= {SPE,SPE,SPD,SPC,SPB};
+			SPE<= SPE;
 		end
 		else begin
-			{SPE,SPD,SPC,SPB,SPA} <= {SPE,SPD,SPC,SPB,SPA};
+			SPE<=SPE;
+		end
+	end
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPD<= SPC;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPD <= SPE;
+		end
+		else begin
+			SPD <= SPD;
+		end
+	end
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPC<= SPB;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPC <= SPD;
+		end
+		else begin
+			SPC <= SPC;
+		end
+	end
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPB<= SPA;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPB<= SPC;
+		end
+		else begin
+			SPB<= SPB;
+		end
+	end
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPA <=PC;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPA<= SPB;
+		end
+		else begin
+			SPA<= SPA;
 		end
 	end
 endmodule
