@@ -27,14 +27,12 @@ wire[3:0] nL; //output
 wire ND; //output 
 wire[4:0] PC_HL; //output 
 	assign uo_out = {nL[2],nL[3],ND,PC_HL[4:0]};
-	assign uio_out = {nL[0],nL[1],3'b000,void_signal};
+	assign uio_out = {nL[0],nL[1],uio_in[7:6],uio_in[4],3'b000};
 
 wire[7:0] mainROM; //input 
 	assign mainROM = ui_in;
 
 assign uio_oe = 8'b1111_0000;  // nL0 | nL1 | PC_MUX | null | KIN | KIN | KIN | KIN 
-	wire void_signal[2:0];
-	assign void_signal = {uio_in[7:6],uio_in[4]};
 
 parameter	
 NOP = 8'h00,
