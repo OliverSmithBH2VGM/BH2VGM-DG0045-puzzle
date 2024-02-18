@@ -27,7 +27,7 @@ wire[3:0] nL; //output
 wire ND; //output 
 wire[4:0] PC_HL; //output 
 	assign uo_out = {nL[2],nL[3],ND,PC_HL[4:0]};
-	assign uio_out = {nL[2],nL[3],ND,PC_HL[4:0]};
+	assign uio_out = {nL[0],nL[1],6'b000000};
 
 wire[7:0] mainROM; //input 
 	assign mainROM = ui_in;
