@@ -85,68 +85,68 @@ reg[7:0] NowState, LastState;
 reg[7:0] nowCMD;
 
 always @(*)begin
-if(nowCMD == 8'b00000010)begin NowState<=RC; end
-//		else if(nowCMD == 8'b00000001)begin NowState<=ATG; end
-else if(nowCMD == 8'b00000011)begin NowState<=SC; end
-else if(nowCMD[7:2] == 6'b000001)begin NowState<=RMP; end
-else if(nowCMD == 8'b00001000)begin NowState<=KTA; end
-else if(nowCMD == 8'b00001001)begin NowState<=TC; end
-//		else if(nowCMD == 8'b00001010)begin NowState<=GTA; end
-else if(nowCMD == 8'b00001011)begin NowState<=CADCSC; end
-else if(nowCMD == 8'b00001100)begin NowState<=ADD; end
-else if(nowCMD == 8'b00001101)begin NowState<=TAM; end
-else if(nowCMD == 8'b00001110)begin NowState<=ADC; end
-else if(nowCMD == 8'b00001111)begin NowState<=ADT; end
+if(nowCMD == 8'b00000010)begin NowState=RC; end
+//		else if(nowCMD == 8'b00000001)begin NowState=ATG; end
+else if(nowCMD == 8'b00000011)begin NowState=SC; end
+else if(nowCMD[7:2] == 6'b000001)begin NowState=RMP; end
+else if(nowCMD == 8'b00001000)begin NowState=KTA; end
+else if(nowCMD == 8'b00001001)begin NowState=TC; end
+//		else if(nowCMD == 8'b00001010)begin NowState=GTA; end
+else if(nowCMD == 8'b00001011)begin NowState=CADCSC; end
+else if(nowCMD == 8'b00001100)begin NowState=ADD; end
+else if(nowCMD == 8'b00001101)begin NowState=TAM; end
+else if(nowCMD == 8'b00001110)begin NowState=ADC; end
+else if(nowCMD == 8'b00001111)begin NowState=ADT; end
 
-else if(nowCMD[7:2] == 6'b000100)begin NowState<=EXC; end
-else if(nowCMD[7:2] == 6'b000101)begin NowState<=EXCI; end
-else if(nowCMD[7:2] == 6'b000110)begin NowState<=LDA; end
-else if(nowCMD[7:2] == 6'b000111)begin NowState<=EXCD; end
+else if(nowCMD[7:2] == 6'b000100)begin NowState=EXC; end
+else if(nowCMD[7:2] == 6'b000101)begin NowState=EXCI; end
+else if(nowCMD[7:2] == 6'b000110)begin NowState=LDA; end
+else if(nowCMD[7:2] == 6'b000111)begin NowState=EXCD; end
 
-else if(nowCMD[7:4] == 4'b0010)begin NowState<=LAM; end
-else if(nowCMD == 8'b00110000)begin NowState<=SKZ; end
-else if(nowCMD == 8'b00110110)begin NowState<=DAA; end
-else if((nowCMD[7:4] == 4'b0011)&&(nowCMD[3:0]!=4'b0000)&&(nowCMD[3:0]!=4'b0110))begin NowState<=ADX; end
+else if(nowCMD[7:4] == 4'b0010)begin NowState=LAM; end
+else if(nowCMD == 8'b00110000)begin NowState=SKZ; end
+else if(nowCMD == 8'b00110110)begin NowState=DAA; end
+else if((nowCMD[7:4] == 4'b0011)&&(nowCMD[3:0]!=4'b0000)&&(nowCMD[3:0]!=4'b0110))begin NowState=ADX; end
 
-else if(nowCMD[7:4] == 4'b0100) begin NowState<=LB; end
-else if(nowCMD[7:2] == 6'b010100) begin NowState<=LB; end
+else if(nowCMD[7:4] == 4'b0100) begin NowState=LB; end
+else if(nowCMD[7:2] == 6'b010100) begin NowState=LB; end
 
-else if(nowCMD == 8'b01010100)begin NowState<=INCB; end
-else if(nowCMD == 8'b01010101)begin NowState<=RZ; end
-//else if(nowCMD == 8'h01010110)begin NowState<=CMPR;end
+else if(nowCMD == 8'b01010100)begin NowState=INCB; end
+else if(nowCMD == 8'b01010101)begin NowState=RZ; end
+//else if(nowCMD == 8'h01010110)begin NowState=CMPR;end
 
-else if(nowCMD[7:2] == 6'b010110)begin NowState<=SMP; end
-else if(nowCMD == 8'b01011100)begin NowState<=DECB; end
+else if(nowCMD[7:2] == 6'b010110)begin NowState=SMP; end
+else if(nowCMD == 8'b01011100)begin NowState=DECB; end
 
-else if(nowCMD == 8'b01011101)begin NowState<=SZ; end
-else if(nowCMD == 8'b01011110)begin NowState<=RET; end
-else if(nowCMD == 8'b01011111)begin NowState<=RETSK; end
+else if(nowCMD == 8'b01011101)begin NowState=SZ; end
+else if(nowCMD == 8'b01011110)begin NowState=RET; end
+else if(nowCMD == 8'b01011111)begin NowState=RETSK; end
 
-//		else if(nowCMD[7:2] == 6'b011000)begin NowState<=LBS; end
-else if(nowCMD[7:2] == 6'b011001)begin NowState<=SKMP; end
-//		else if(nowCMD == 8'b01101000)begin NowState<=ResetW; end
-//		else if(nowCMD == 8'b01101001)begin NowState<=SetW; end
-else if(nowCMD == 8'b01101010)begin NowState<=SHD0; end
-else if(nowCMD == 8'b01101011)begin NowState<=SHD1; end
-//		else if(nowCMD == 8'b01101100)begin NowState<=LTSPU; end
-else if(nowCMD == 8'b01101101)begin NowState<=ATL; end
-else if(nowCMD == 8'b01101110)begin NowState<=RNP; end
-else if(nowCMD == 8'b01101111)begin NowState<=SNP; end
+//		else if(nowCMD[7:2] == 6'b011000)begin NowState=LBS; end
+else if(nowCMD[7:2] == 6'b011001)begin NowState=SKMP; end
+//		else if(nowCMD == 8'b01101000)begin NowState=ResetW; end
+//		else if(nowCMD == 8'b01101001)begin NowState=SetW; end
+else if(nowCMD == 8'b01101010)begin NowState=SHD0; end
+else if(nowCMD == 8'b01101011)begin NowState=SHD1; end
+//		else if(nowCMD == 8'b01101100)begin NowState=LTSPU; end
+else if(nowCMD == 8'b01101101)begin NowState=ATL; end
+else if(nowCMD == 8'b01101110)begin NowState=RNP; end
+else if(nowCMD == 8'b01101111)begin NowState=SNP; end
 
-else if(nowCMD[7:4] == 4'b0111) begin NowState<=SSP; end
-else if(nowCMD[7:6] == 2'b10) begin NowState<=JMP; end
-else if(nowCMD[7:6] == 2'b11) begin NowState<=CALL; end
-else begin NowState<=NOP; end
+else if(nowCMD[7:4] == 4'b0111) begin NowState=SSP; end
+else if(nowCMD[7:6] == 2'b10) begin NowState=JMP; end
+else if(nowCMD[7:6] == 2'b11) begin NowState=CALL; end
+else begin NowState=NOP; end
 end
 
 always @(lastCMD[7:0])begin
-if(lastCMD[7:4] == 4'b0010)begin LastState<=LAM; end
-else if(lastCMD[7:4] == 4'b0100) begin LastState<=LB; end
-else if(lastCMD[7:2] == 6'b010100) begin LastState<=LB; end
-//		else if(lastCMD[7:0] == 8'b01101100) begin LastState<=LTSPU; end
-else if(lastCMD[7:4] == 4'b0111) begin LastState<=SSP; end
-//		else if(lastCMD[7:0] == 8'h57) begin LastState<=Double_flag; end
-else begin LastState<=NOP; end
+if(lastCMD[7:4] == 4'b0010)begin LastState=LAM; end
+else if(lastCMD[7:4] == 4'b0100) begin LastState=LB; end
+else if(lastCMD[7:2] == 6'b010100) begin LastState=LB; end
+//		else if(lastCMD[7:0] == 8'b01101100) begin LastState=LTSPU; end
+else if(lastCMD[7:4] == 4'b0111) begin LastState=SSP; end
+//		else if(lastCMD[7:0] == 8'h57) begin LastState=Double_flag; end
+else begin LastState=NOP; end
 end
 
 wire RESET;
@@ -561,7 +561,7 @@ end
 
 always @(*)
 begin
-        dout <= mem [addr] ;
+        dout = mem [addr] ;
 end
 
 endmodule
