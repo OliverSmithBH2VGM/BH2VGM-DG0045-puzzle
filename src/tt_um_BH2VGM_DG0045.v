@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2024 OliverSmithBH2VGM
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -155,12 +155,7 @@ wire CLKF1,CLKF2;
 reg[2:0] clock_devider;
 
 always@(posedge clk)begin
-	if(RESET == 1'b0)begin
-		clock_devider <= 3'b000;
-	end
-	else  begin
 		clock_devider <= clock_devider + 3'b001;
-	end
 end
 
 assign CLKF1 = (clock_devider[2:1] == 2'b01)? 1'b1:1'b0;
