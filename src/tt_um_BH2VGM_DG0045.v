@@ -154,11 +154,10 @@ wire RESET;
 wire CLKF1,CLKF2;
 reg[2:0] clock_devider;
 
-	always@(posedge clk or negedge RESET)
-begin
+always@(posedge clk)begin
 	if(RESET == 1'b0)begin
-	clock_devider <= 3'b000;end
-	
+		clock_devider <= 3'b000;
+	end
 	else  begin
 		clock_devider <= clock_devider + 3'b001;
 	end
