@@ -475,7 +475,7 @@ DG0045_RAM_256bit DG0040_MY_RAM
 	
    .addr({BU,BL}),
    .din(AtoRAM),
-	.clk(RAM_WR),
+	.RAM_clk(RAM_WR),
 	.dout(RAMtoA)
 	
 );
@@ -544,7 +544,7 @@ endmodule
 
 
 module DG0045_RAM_256bit(
-           input   wire clk  ,
+           input   wire RAM_clk  ,
            input   wire[5:0] addr ,
            input   wire[3:0]din  ,
            output wire[3:0]dout
@@ -552,7 +552,7 @@ module DG0045_RAM_256bit(
  
 reg [3:0] mem [0:63];
  
-always @(posedge clk)
+always @(posedge RAM_clk)
 begin
         mem [addr] <= din;
 end
