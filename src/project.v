@@ -9,6 +9,7 @@ module tt_um_BH2VGM_DG0045(
 	input wire clk,
 	input wire[3:0] KIN,
 	input wire nreset,
+	input wire ena,
 	output wire[3:0] nL,
 	output wire ND,
 	input wire PC_MUX,
