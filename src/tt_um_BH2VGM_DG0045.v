@@ -27,12 +27,14 @@ wire[3:0] nL; //output
 wire ND; //output 
 wire[4:0] PC_HL; //output 
 	assign uo_out = {nL[2],nL[3],ND,PC_HL[4:0]};
-	assign uio_out = {nL[0],nL[1],6'b000000};
+	assign uio_out = {nL[0],nL[1],3'b000,void_signal};
 
 wire[7:0] mainROM; //input 
 	assign mainROM = ui_in;
 
 assign uio_oe = 8'b1111_0000;  // nL0 | nL1 | PC_MUX | null | KIN | KIN | KIN | KIN 
+	wire void_signal[2:0];
+	assign void_signal = {uio_in[7:6],uio_in[4]};
 
 parameter	
 NOP = 8'h00,
@@ -140,12 +142,10 @@ NOP;
 
 
 assign LastState = 
-(lastCMD[7:4] == 4'b0010)?LAM:
- (lastCMD[7:4] == 4'b0100) ?LB:
- (lastCMD[7:2] == 6'b010100) ?LB:
-//		 (lastCMD[7:0] == 8'b01101100) ?LTSPU:
- (lastCMD[7:4] == 4'b0111) ?SSP:
-//		 (lastCMD[7:0] == 8'h57) ?Double_flag:
+	(lastCMD[5:2] == 4'b0010)?LAM:
+	(lastCMD[5:2] == 4'b0100) ?LB:
+	(lastCMD[5:0] == 6'b010100) ?LB:
+	(lastCMD[5:2] == 4'b0111) ?SSP:
 NOP;
 
 
@@ -183,7 +183,7 @@ assign F2 = CLKF2 & CLKEN;
 //		assign ROMout0 = nowCMD[0];
 //		assign ROMout2 = nowCMD[2];
 
-reg[7:0] lastCMD;
+	reg[5:0] lastCMD;
 
 always @(negedge F1 or negedge RESET)
 if(RESET==1'b0)begin
@@ -193,7 +193,7 @@ end
 else begin
 	//nowCMD <= ROMmask & mainROM ;
 	nowCMD <= NRF?  mainROM : NOP ;
-	lastCMD <= nowCMD;
+	lastCMD <= nowCMD[7:2];
 end
 
 //----------------
