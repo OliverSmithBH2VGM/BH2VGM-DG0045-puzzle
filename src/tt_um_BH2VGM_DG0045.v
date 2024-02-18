@@ -8,7 +8,7 @@
 module tt_um_BH2VGM_DG0045(
 	input wire clk,  // main clock  // posedge effective // 8 posedge = 1 machine cycle
 	input wire rst_n, // reset signal // low effective
-	input wire ena, // nothing connect internally
+	input wire ena, // if ena = 1, CPU works, else, clk has no effect
 
 	input wire[7:0] ui_in,  // connects to mainROM
 	output wire[7:0] uo_out, // PC_HL[4:0] outs and nL[3:2] and ND
@@ -151,10 +151,12 @@ NOP;
 
 wire RESET;
 	assign RESET = rst_n;
+wire clk_in;
+	assign clk_in = clk & ena;
 wire CLKF1,CLKF2;
 reg[2:0] clock_devider;
 
-always@(posedge clk or negedge RESET)begin
+always@(posedge clk_in or negedge RESET)begin
 	if(RESET == 1'b0)begin clock_devider <=3'b000; end
 	else begin clock_devider <= clock_devider + 3'b001; end
 end
@@ -457,15 +459,13 @@ end
 wire RAM_WR;
 assign RAM_WR = F2 & RAM_WR_CMD;
 
-/*DG0045_RAM_256bit DG0040_MY_RAM
+DG0045_RAM_256bit DG0040_MY_RAM
 (
-	
-   .addr({BU,BL}),
-   .din(AtoRAM),
-	.RAM_clk(RAM_WR),
-	.dout(RAMtoA)
-	
-);*/
+.addr({BU,BL}),
+.din(AtoRAM),
+.RAM_clk(RAM_WR),
+.dout(RAMtoA)	
+);
 
 wire NRF;
 // SKIP group
