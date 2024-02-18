@@ -21,8 +21,8 @@ module tt_um_BH2VGM_DG0045(
 
 	always@(posedge clk or negedge rst_n)
 	begin
-		if(rst_n==1'b0)begin outregs <= ui_in ; end
-		else begin outregs <= ena? uio_in:8'b00000000 ; end
+		if(rst_n==1'b0)begin outregs <= 8'b00000000  ; end
+		else begin outregs <= ena? uio_in:ui_in; end
 	end
 	assign uo_out = outregs;
 	assign uio_oe = 8'b00001111;
