@@ -188,7 +188,7 @@ assign F2 = CLKF2 & CLKEN;
 always @(negedge F1 or negedge RESET)
 if(RESET==1'b0)begin
 	nowCMD <= 8'b00000000;
-	lastCMD <= 8'b00000000;
+	lastCMD <= 6'b000000;
 end
 else begin
 	//nowCMD <= ROMmask & mainROM ;
