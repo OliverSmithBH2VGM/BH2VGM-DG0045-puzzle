@@ -16,7 +16,9 @@ module tt_um_BH2VGM_DG0045(
 	output wire[7:0] uio_out,// nL outs at uio_out[7:6]
 	output wire[7:0] uio_oe// bit 0 means input ; bit 1 means output
 );
-
+	wire[2:0] uio_void;
+	assign uio_void = {uio_in[7:6],uio_in[4]};
+	
 wire[3:0] KIN; //input 
 	assign KIN = uio_in[3:0];
 
@@ -27,7 +29,7 @@ wire[3:0] nL; //output
 wire ND; //output 
 wire[4:0] PC_HL; //output 
 	assign uo_out = {nL[2],nL[3],ND,PC_HL[4:0]};
-	assign uio_out = {nL[0],nL[1],uio_in[7:6],uio_in[4],3'b000};
+	assign uio_out = {nL[0],nL[1],uio_void[2:0],3'b000};
 
 wire[7:0] mainROM; //input 
 	assign mainROM = ui_in;
