@@ -598,9 +598,12 @@ output wire[9:0] SP,
 output wire PL1NXR0
 );
 	
-	reg[9:0] SPA,SPB,SPC,SPD,SPE;
+	reg[9:0] SPA;
+	reg[9:0] SPB;
+	reg[9:0] SPC;
+	reg[9:0] SPD;
+	reg[9:0] SPE;
 	
-
 	assign PL1NXR0 = (PC[0]==PC[1]) ? 1'b1:1'b0;
 	assign SP = SPA;
 	
@@ -613,7 +616,7 @@ output wire PL1NXR0
 			SPA <= PC;
 		end
 		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
-			SPE <= 10'b0000_000000;
+			SPE <= SPE;
 			SPD <= SPE;
 			SPC <= SPD;
 			SPB <= SPC;
