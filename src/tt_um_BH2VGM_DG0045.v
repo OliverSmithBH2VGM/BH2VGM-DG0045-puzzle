@@ -437,7 +437,7 @@ always @(posedge F2 or negedge RESET)begin
 		end
 		else if((NowState==LB)&&(LastState!=LB))begin
 			if(nowCMD[4:2]==3'b000)begin
-				{BU,BL}<={BS,nowCMD[1:0],4'b0000};
+				{BU,BL}<={nowCMD[1:0],4'b0000};
 			end
 			else if(nowCMD[4:2]==3'b001)begin
 					begin {BU,BL}<={nowCMD[1:0],4'b1101}; end
