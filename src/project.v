@@ -6,9 +6,9 @@
 `define default_netname none
 
 module tt_um_BH2VGM_DG0045(
-	input wire CLK_main,
+	input wire clk,
 	input wire[3:0] KIN,
-	input wire RESET,
+	input wire nreset,
 	output wire[3:0] nL,
 	output wire ND,
 	input wire PC_MUX,
@@ -133,11 +133,12 @@ else if(lastCMD[7:4] == 4'b0111) begin LastState<=SSP; end
 else begin LastState<=NOP; end
 end
 
-
+wire RESET；
+	assign RESET = nreset;
 wire CLKF1,CLKF2;
 reg[2:0] clock_devider;
 
-always@(posedge CLK_main or negedge RESET)
+	always@(posedge clk or negedge RESET)
 begin
 	if(RESET == 1'b0)begin
 	clock_devider <= 3'b000;end
