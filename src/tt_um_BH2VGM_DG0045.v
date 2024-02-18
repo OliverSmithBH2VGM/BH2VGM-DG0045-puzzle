@@ -5,36 +5,6 @@
 
 `define default_netname none
 
-/*module tt_um_BH2VGM_DG0045(
-	input wire clk,  // main clock  // posedge effective // 8 posedge = 1 machine cycle
-	input wire rst_n, // reset signal // low effective
-	input wire ena, // if ena = 1, CPU works, else, clk has no effect
-
-	input wire[7:0] ui_in,  // connects to mainROM
-	output wire[7:0] uo_out, // PC_HL[4:0] outs and nL[3:2] and ND
-	input wire[7:0] uio_in, //KIN at uio_in[3:0], PC_MUX at uio_in[5]
-	output wire[7:0] uio_out,// nL outs at uio_out[7:6]
-	output wire[7:0] uio_oe// bit 0 means input ; bit 1 means output
-);
-	wire clka;
-	assign clka = clk & ena;
-	reg[7:0] output_reg;
-
-	assign uo_out = output_reg;
-	always@(posedge clka or negedge rst_n)
-		begin
-			if(rst_n==1'b0)begin
-				output_reg <= 8'b00000000;
-			end
-			else begin
-				output_reg <= ui_in;
-			end
-		end
-	assign uio_oe= 8'b11110000;
-	assign uio_out = ~uio_in;
-endmodule*/
-
-
 module tt_um_BH2VGM_DG0045(
 	input wire clk,  // main clock  // posedge effective // 8 posedge = 1 machine cycle
 	input wire rst_n, // reset signal // low effective
@@ -184,19 +154,19 @@ wire RESET;
 wire clk_in;
 	assign clk_in = clk & ena;
 wire CLKF1,CLKF2;
-reg[2:0] clock_devider;
+reg[2:0] clock_divider;
 
 always@(posedge clk_in or negedge RESET)begin
-	if(RESET == 1'b0)begin clock_devider <=3'b000; end
-	else begin clock_devider <= clock_devider + 3'b001; end
+	if(RESET == 1'b0)begin clock_divider <=3'b000; end
+	else begin clock_divider <= clock_divider + 3'b001; end
 end
 
-assign CLKF1 = (clock_devider[2:1] == 2'b01)? 1'b1:1'b0;
-assign CLKF2 = (clock_devider[2:1] == 2'b11)? 1'b1:1'b0;
+assign CLKF1 = (clock_divider[2:1] == 2'b01)? 1'b1:1'b0;
+assign CLKF2 = (clock_divider[2:1] == 2'b11)? 1'b1:1'b0;
 
 reg CLKEN;
 wire F1,F2;
-always@(negedge CLKF2 or negedge RESET)
+always@(negedge CLKF2)
 begin
 	if(RESET == 1'b0)begin
 		CLKEN <= 1'b0;
@@ -234,25 +204,9 @@ wire[9:0] PTR_STACK;
 wire new_PL5;
 wire STK_CLK,PC_CLK;
 
-reg stk_flag,stk_flag_temp;
+wire stk_flag;
 // program counter group
-always @(negedge F2 or posedge F1 or negedge RESET)begin
-	if(F1==1'b1 || RESET==1'b0)begin
-		stk_flag_temp<=1'b1;
-	end
-	else begin
-		stk_flag_temp <= 1'b0;
-	end
-end
-
-always @(negedge F1 or negedge stk_flag_temp or negedge RESET)begin
-	if(stk_flag_temp==1'b0 || RESET==1'b0)begin
-		stk_flag <= 1'b0;
-	end
-	else begin
-		stk_flag <= 1'b1;
-	end
-end
+assign stk_flag = clock_divider[2];
 
 always @(posedge F2 or negedge RESET)begin
 	if(RESET==1'b0)begin
@@ -554,6 +508,9 @@ begin
 end
 
 assign nL = ~Lreg;
+
+//****G 
+
 endmodule
 
 
