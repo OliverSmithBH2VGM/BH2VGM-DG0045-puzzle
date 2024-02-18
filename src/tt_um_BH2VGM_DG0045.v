@@ -81,73 +81,73 @@ CALL = 8'hC0;
 
 //		Double_flag = 8'h57;
 
-reg[7:0] NowState, LastState;
+wire[7:0] NowState, LastState;
 reg[7:0] nowCMD;
 
-always @(*)begin
-if(nowCMD == 8'b00000010)begin NowState=RC; end
-//		else if(nowCMD == 8'b00000001)begin NowState=ATG; end
-else if(nowCMD == 8'b00000011)begin NowState=SC; end
-else if(nowCMD[7:2] == 6'b000001)begin NowState=RMP; end
-else if(nowCMD == 8'b00001000)begin NowState=KTA; end
-else if(nowCMD == 8'b00001001)begin NowState=TC; end
-//		else if(nowCMD == 8'b00001010)begin NowState=GTA; end
-else if(nowCMD == 8'b00001011)begin NowState=CADCSC; end
-else if(nowCMD == 8'b00001100)begin NowState=ADD; end
-else if(nowCMD == 8'b00001101)begin NowState=TAM; end
-else if(nowCMD == 8'b00001110)begin NowState=ADC; end
-else if(nowCMD == 8'b00001111)begin NowState=ADT; end
+assign NowState = 
+(nowCMD == 8'b00000010)?RC:
+//		 (nowCMD == 8'b00000001)?ATG:
+ (nowCMD == 8'b00000011)?SC:
+ (nowCMD[7:2] == 6'b000001)?RMP:
+ (nowCMD == 8'b00001000)?KTA:
+ (nowCMD == 8'b00001001)?TC:
+//		 (nowCMD == 8'b00001010)?GTA:
+ (nowCMD == 8'b00001011)?CADCSC:
+ (nowCMD == 8'b00001100)?ADD:
+ (nowCMD == 8'b00001101)?TAM:
+ (nowCMD == 8'b00001110)?ADC:
+ (nowCMD == 8'b00001111)?ADT:
 
-else if(nowCMD[7:2] == 6'b000100)begin NowState=EXC; end
-else if(nowCMD[7:2] == 6'b000101)begin NowState=EXCI; end
-else if(nowCMD[7:2] == 6'b000110)begin NowState=LDA; end
-else if(nowCMD[7:2] == 6'b000111)begin NowState=EXCD; end
+ (nowCMD[7:2] == 6'b000100)?EXC:
+ (nowCMD[7:2] == 6'b000101)?EXCI:
+ (nowCMD[7:2] == 6'b000110)?LDA:
+ (nowCMD[7:2] == 6'b000111)?EXCD:
 
-else if(nowCMD[7:4] == 4'b0010)begin NowState=LAM; end
-else if(nowCMD == 8'b00110000)begin NowState=SKZ; end
-else if(nowCMD == 8'b00110110)begin NowState=DAA; end
-else if((nowCMD[7:4] == 4'b0011)&&(nowCMD[3:0]!=4'b0000)&&(nowCMD[3:0]!=4'b0110))begin NowState=ADX; end
+ (nowCMD[7:4] == 4'b0010)?LAM:
+ (nowCMD == 8'b00110000)?SKZ:
+ (nowCMD == 8'b00110110)?DAA:
+ ((nowCMD[7:4] == 4'b0011)&&(nowCMD[3:0]!=4'b0000)&&(nowCMD[3:0]!=4'b0110))?ADX:
 
-else if(nowCMD[7:4] == 4'b0100) begin NowState=LB; end
-else if(nowCMD[7:2] == 6'b010100) begin NowState=LB; end
+ (nowCMD[7:4] == 4'b0100) ?LB:
+ (nowCMD[7:2] == 6'b010100) ?LB:
 
-else if(nowCMD == 8'b01010100)begin NowState=INCB; end
-else if(nowCMD == 8'b01010101)begin NowState=RZ; end
-//else if(nowCMD == 8'h01010110)begin NowState=CMPR;end
+ (nowCMD == 8'b01010100)?INCB:
+ (nowCMD == 8'b01010101)?RZ:
+// (nowCMD == 8'h01010110)?CMPR;end
 
-else if(nowCMD[7:2] == 6'b010110)begin NowState=SMP; end
-else if(nowCMD == 8'b01011100)begin NowState=DECB; end
+ (nowCMD[7:2] == 6'b010110)?SMP:
+ (nowCMD == 8'b01011100)?DECB:
 
-else if(nowCMD == 8'b01011101)begin NowState=SZ; end
-else if(nowCMD == 8'b01011110)begin NowState=RET; end
-else if(nowCMD == 8'b01011111)begin NowState=RETSK; end
+ (nowCMD == 8'b01011101)?SZ:
+ (nowCMD == 8'b01011110)?RET:
+ (nowCMD == 8'b01011111)?RETSK:
 
-//		else if(nowCMD[7:2] == 6'b011000)begin NowState=LBS; end
-else if(nowCMD[7:2] == 6'b011001)begin NowState=SKMP; end
-//		else if(nowCMD == 8'b01101000)begin NowState=ResetW; end
-//		else if(nowCMD == 8'b01101001)begin NowState=SetW; end
-else if(nowCMD == 8'b01101010)begin NowState=SHD0; end
-else if(nowCMD == 8'b01101011)begin NowState=SHD1; end
-//		else if(nowCMD == 8'b01101100)begin NowState=LTSPU; end
-else if(nowCMD == 8'b01101101)begin NowState=ATL; end
-else if(nowCMD == 8'b01101110)begin NowState=RNP; end
-else if(nowCMD == 8'b01101111)begin NowState=SNP; end
+//		 (nowCMD[7:2] == 6'b011000)?LBS:
+ (nowCMD[7:2] == 6'b011001)?SKMP:
+//		 (nowCMD == 8'b01101000)?ResetW:
+//		 (nowCMD == 8'b01101001)?SetW:
+ (nowCMD == 8'b01101010)?SHD0:
+ (nowCMD == 8'b01101011)?SHD1:
+//		 (nowCMD == 8'b01101100)?LTSPU:
+ (nowCMD == 8'b01101101)?ATL:
+ (nowCMD == 8'b01101110)?RNP:
+ (nowCMD == 8'b01101111)?SNP:
 
-else if(nowCMD[7:4] == 4'b0111) begin NowState=SSP; end
-else if(nowCMD[7:6] == 2'b10) begin NowState=JMP; end
-else if(nowCMD[7:6] == 2'b11) begin NowState=CALL; end
-else begin NowState=NOP; end
-end
+ (nowCMD[7:4] == 4'b0111) ?SSP:
+ (nowCMD[7:6] == 2'b10) ?JMP:
+ (nowCMD[7:6] == 2'b11) ?CALL:
+NOP; 
 
-always @(lastCMD[7:0])begin
-if(lastCMD[7:4] == 4'b0010)begin LastState=LAM; end
-else if(lastCMD[7:4] == 4'b0100) begin LastState=LB; end
-else if(lastCMD[7:2] == 6'b010100) begin LastState=LB; end
-//		else if(lastCMD[7:0] == 8'b01101100) begin LastState=LTSPU; end
-else if(lastCMD[7:4] == 4'b0111) begin LastState=SSP; end
-//		else if(lastCMD[7:0] == 8'h57) begin LastState=Double_flag; end
-else begin LastState=NOP; end
-end
+
+assign LastState = 
+(lastCMD[7:4] == 4'b0010)?LAM:
+ (lastCMD[7:4] == 4'b0100) ?LB:
+ (lastCMD[7:2] == 6'b010100) ?LB:
+//		 (lastCMD[7:0] == 8'b01101100) ?LTSPU:
+ (lastCMD[7:4] == 4'b0111) ?SSP:
+//		 (lastCMD[7:0] == 8'h57) ?Double_flag:
+NOP;
+
 
 wire RESET;
 	assign RESET = rst_n;
@@ -310,7 +310,7 @@ assign PC_HL = PC_MUX? {PU,PL[5]}:PL[4:0];
 reg[3:0] ACC;
 wire[3:0] ALU_OUT;
 reg CC,CC2;
-reg[3:0] AtoRAM;
+wire[3:0] AtoRAM;
 wire[3:0] RAMtoA,ALU_INA,ALU_INB;
 wire RAM_WR_CMD;
 wire CIN,COUT;
@@ -389,7 +389,7 @@ begin
 end
 
 
-always @(*)begin   // SMP and RMP classes
+/*always @(*)begin   // SMP and RMP classes
 	if(NowState==RMP)begin
 		if(nowCMD[1:0]==2'b00)begin AtoRAM=(RAMtoA & 4'b1110);end
 		else if(nowCMD[1:0]==2'b01)begin AtoRAM=(RAMtoA & 4'b1101);end
@@ -402,10 +402,14 @@ always @(*)begin   // SMP and RMP classes
 		else if(nowCMD[1:0]==2'b10)begin AtoRAM=(RAMtoA | 4'b0100);end
 		else begin AtoRAM=(RAMtoA | 4'b1000); end
 	end
-	//else if((NowState==ADC)||(NowState==CADCSC)||(NowState==ADT)||(NowState==DAA)) begin AtoRAM <= ALU_OUT; end
 	else if(NowState==LAM)begin AtoRAM=nowCMD[3:0]; end
 	else begin AtoRAM = ACC; end
-end
+end*/
+
+wire[3:0] CD4555_decode;
+assign CD4555_decode = (nowCMD[1:0]==2'b00)? 4'b0001:(nowCMD[1:0]==2'b01)? 4'b0010:(nowCMD[1:0]==2'b11)? 4'b0100:4'b1000;
+
+assign AtoRAM=(NowState==RMP)? (RAMtoA & (~CD4555_decode) ) :(NowState==SMP)? (RAMtoA | CD4555_decode ) :(NowState==LAM)? nowCMD[3:0] : ACC ;
 
 // RAM groups
 reg[3:0] BL;
@@ -546,10 +550,10 @@ endmodule
 
 
 module DG0045_RAM_256bit(
-           input           clk  ,
-           input     [5:0] addr ,
-           input     [3:0]din  ,
-           output reg[3:0]dout
+           input   wire clk  ,
+           input   wire[5:0] addr ,
+           input   wire[3:0]din  ,
+           output wire[3:0]dout
           );
  
 reg [3:0] mem [0:63];
@@ -559,10 +563,7 @@ begin
         mem [addr] <= din;
 end
 
-always @(*)
-begin
-        dout = mem [addr] ;
-end
+assign   dout = mem [addr] ;
 
 endmodule
 
