@@ -407,7 +407,7 @@ end
 end*/
 
 wire[3:0] CD4555_decode;
-assign CD4555_decode = (nowCMD[1:0]==2'b00)? 4'b0001:(nowCMD[1:0]==2'b01)? 4'b0010:(nowCMD[1:0]==2'b11)? 4'b0100:4'b1000;
+assign CD4555_decode = (nowCMD[1:0]==2'b00)? 4'b0001:(nowCMD[1:0]==2'b01)? 4'b0010:(nowCMD[1:0]==2'b10)? 4'b0100:4'b1000;
 
 assign AtoRAM=(NowState==RMP)? (RAMtoA & (~CD4555_decode) ) :(NowState==SMP)? (RAMtoA | CD4555_decode ) :(NowState==LAM)? nowCMD[3:0] : ACC ;
 
