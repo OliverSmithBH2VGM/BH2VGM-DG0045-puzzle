@@ -27,6 +27,7 @@ wire[3:0] nL; //output
 wire ND; //output 
 wire[4:0] PC_HL; //output 
 	assign uo_out = {nL[2],nL[3],ND,PC_HL[4:0]};
+	assign uio_out = {nL[2],nL[3],ND,PC_HL[4:0]};
 
 wire[7:0] mainROM; //input 
 	assign mainROM = ui_in;
@@ -82,8 +83,6 @@ CALL = 8'hC0;
 
 reg[7:0] NowState, LastState;
 reg[7:0] nowCMD;
-
-wire NRFS;
 
 always @(*)begin
 if(nowCMD == 8'b00000010)begin NowState<=RC; end
@@ -188,7 +187,6 @@ assign F2 = CLKF2 & CLKEN;
 //		assign ROMout2 = nowCMD[2];
 
 reg[7:0] lastCMD;
-wire[7:0] ROMmask;
 
 always @(negedge F1 or negedge RESET)
 if(RESET==1'b0)begin
@@ -442,10 +440,10 @@ always @(posedge F2 or negedge RESET)begin
 				{BU,BL}<={BS,nowCMD[1:0],4'b0000};
 			end
 			else if(nowCMD[4:2]==3'b001)begin
-					begin {BU,BL}<={BS,nowCMD[1:0],4'b1101}; end
+					begin {BU,BL}<={nowCMD[1:0],4'b1101}; end
 			end
 			else if(nowCMD[4:2]==3'b010)begin
-					begin {BU,BL}<={BS,nowCMD[1:0],4'b1110}; end
+					begin {BU,BL}<={nowCMD[1:0],4'b1110}; end
 			end
 			else if(nowCMD[4:2]==3'b011)begin
 				{BU,BL}<={nowCMD[1:0],4'b1111};
@@ -477,7 +475,7 @@ assign RAM_WR = F2 & RAM_WR_CMD;
 DG0045_RAM_256bit DG0040_MY_RAM
 (
 	
-   .addr({BS,BU,BL}),
+   .addr({BU,BL}),
    .din(AtoRAM),
 	.clk(RAM_WR),
 	.dout(RAMtoA)
@@ -554,7 +552,7 @@ module DG0045_RAM_256bit(
            output reg[3:0]dout
           );
  
-reg [47:0] mem [0:255];
+reg [3:0] mem [0:63];
  
 always @(posedge clk)
 begin
