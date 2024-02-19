@@ -42,7 +42,10 @@ wire RSC;
 wire RMP;wire KTA;wire TC;
 
 wire CADCSC;wire ADD;wire ADC;wire ADT;wire TAM;
-wire EXC;wire EXCI;wire LDA;wire EXCD;
+wire EXC;
+//wire EXCI;
+wire LDA;
+//wire EXCD;
 wire LAM;
 wire SKZ;
 wire ADX;wire DAA;
@@ -80,12 +83,10 @@ reg[7:0] nowCMD;
   	assign ADC=(nowCMD == 8'b00001110)?1'b1:1'b0;
   	assign ADT=(nowCMD == 8'b00001111)?1'b1:1'b0;
 
-  	assign EXC=(nowCMD[7:3] == 6'b00010)?1'b1:1'b0;
+  	assign EXC=(nowCMD[7:3] == 5'b00010)?1'b1:1'b0;
 //  	assign EXCI=(nowCMD[7:2] == 6'b000101)?1'b1:1'b0;
- 	assign LDA =(nowCMD[7:3] == 6'b00011)?1'b1:1'b0;
+ 	assign LDA =(nowCMD[7:3] == 5'b00011)?1'b1:1'b0;
 // 	assign EXCD= (nowCMD[7:2] == 6'b000111)?1'b1:1'b0;
-assign EXCI = 1'b0;
-assign EXCD = 1'b0;
 
   	assign LAM=(nowCMD[7:4] == 4'b0010)?1'b1:1'b0;
  	assign SKZ=(nowCMD == 8'b00110000)?1'b1:1'b0;
@@ -120,11 +121,10 @@ assign EXCD = 1'b0;
  	assign JMP= (nowCMD[7:6] == 2'b10) ?1'b1:1'b0;
  	assign CALL= (nowCMD[7:6] == 2'b11) ?1'b1:1'b0;
 
-
-assign 	LastLAM=(lastCMD[5:2] == 4'b0010)?1'b1:1'b0;
+assign 	LastLAM=(lastCMD[3:0] == 4'b0010)?1'b1:1'b0;
 //assign 	LastLB=((lastCMD[5:2] == 4'b0100)||(lastCMD[5:0] == 6'b010100))?1'b1:1'b0;
-assign 	LastLB=(lastCMD[5:2] == 4'b0100)?1'b1:1'b0;
-assign 	LastSSP=(lastCMD[5:2] == 4'b0111)?1'b1:1'b0;
+assign 	LastLB=(lastCMD[3:0] == 4'b0100)?1'b1:1'b0;
+assign 	LastSSP=(lastCMD[3:0] == 4'b0111)?1'b1:1'b0;
 
 
 wire RESET;
@@ -161,17 +161,17 @@ assign F2 = CLKF2 & CLKEN;
 //		assign ROMout0 = nowCMD[0];
 //		assign ROMout2 = nowCMD[2];
 
-	reg[5:0] lastCMD;
+	reg[3:0] lastCMD;
 
 always @(negedge F1 or negedge RESET)
 if(RESET==1'b0)begin
 	nowCMD <= 8'b00000000;
-	lastCMD <= 6'b000000;
+	lastCMD <= 4'b0000;
 end
 else begin
 	//nowCMD <= ROMmask & mainROM ;
 	nowCMD <= NRF?  mainROM : 8'b00000000 ;
-	lastCMD <= nowCMD[7:2];
+	lastCMD <= nowCMD[7:4];
 end
 
 //----------------
@@ -276,9 +276,9 @@ assign RAM_WR_CMD =(
 ((LAM==1'b1) && (LastLAM==1'b1)) ||
 (SMP ==1'b1)||
 ( RMP==1'b1)||
-( EXC==1'b1)||
+( EXC==1'b1)/*||
 ( EXCI==1'b1)||
-( EXCD==1'b1)
+( EXCD==1'b1)*/
 ) 
 ? 1'b1: 1'b0;
 // ACC groups
@@ -293,7 +293,8 @@ always @(posedge F2 or negedge RESET)
 begin
 	if(RESET == 1'b0) begin ACC<=4'b0000; end
 	else  begin
-		if(( LDA==1'b1)||( EXC==1'b1)||( EXCI==1'b1)||(  EXCD==1'b1)) 
+		//if(( LDA==1'b1)||( EXC==1'b1)||( EXCI==1'b1)||(  EXCD==1'b1)) 
+		if(( LDA==1'b1)||( EXC==1'b1)) 
 			begin ACC<=RAMtoA; end
 		else if(( ADC==1'b1)||( ADD==1'b1)||( CADCSC==1'b1)||( ADT==1'b1)||( ADX==1'b1)) 
 			begin ACC<=ALU_OUT; end
@@ -433,10 +434,10 @@ assign NRF = (
 (( CADCSC==1'b1)&&(CC==1'b1)) ||
 (( TAM==1'b1)&&(ACC==RAMtoA)) ||
 (( ADT==1'b1)&&(CC==1'b0)) ||
-(( EXCI==1'b1)&&(LastBL==4'b1011)) ||
-(( EXCD==1'b1)&&(LastBL==4'b0000)) ||
-(( INCB==1'b1)&&(LastBL==4'b1011)) ||
-(( DECB==1'b1)&&(LastBL==4'b0000)) ||
+//(( EXCI==1'b1)&&(LastBL==4'b1011)) ||
+//(( EXCD==1'b1)&&(LastBL==4'b0000)) ||
+(( INCB==1'b1)&&(LastBL==3'b101)) ||
+(( DECB==1'b1)&&(LastBL==3'b000)) ||
 (( SKZ==1'b1)&&(Zreg==1'b1)) ||
 (( ADX==1'b1)&&(CC2==1'b0)) ||
 (( SKMP==1'b1)&&(nowCMD[1:0]==2'b00)&&(RAMtoA[0]==1'b1)) ||
@@ -487,3 +488,111 @@ assign nL = ~Lreg;
 //****G 
 
 endmodule
+
+/*
+module DG0045_RAM_128bit(
+           input   wire RAM_clk  ,
+           input   wire[4:0] addr ,
+           input   wire[3:0]din  ,
+           output wire[3:0]dout
+          );
+ 
+reg [3:0] mem [0:31];
+ 
+always @(posedge RAM_clk)
+begin
+        mem [addr] <= din;
+end
+
+assign   dout = mem [addr] ;
+
+endmodule
+
+
+module FULLADDER4
+(
+	input wire[3:0] Ain,
+	input wire[3:0] Bin,
+	input wire Cin,
+	output wire[3:0] Sout,
+	output wire Cout
+);
+
+wire[4:0] A_IN_t,B_IN_t,C_IN_t;
+wire[4:0] A_OUT;
+assign A_IN_t = {1'b0,Ain};
+assign B_IN_t = {1'b0,Bin};
+assign C_IN_t = {4'b0000,Cin};
+assign A_OUT = A_IN_t + B_IN_t + C_IN_t;
+assign Sout = A_OUT[3:0];
+assign Cout = A_OUT[4];
+
+endmodule
+
+
+module DG0040_SHIFTREGS(
+input wire STK_CLK,
+input wire MODE1,
+input wire MODE0,
+input wire[9:0] PC,
+output wire[9:0] SP,
+output wire PL1NXR0
+);
+	
+	reg[9:0] SPA;
+	reg[9:0] SPB;
+	reg[9:0] SPC;
+	reg[9:0] SPD;
+	
+	assign PL1NXR0 = (PC[0]==PC[1]) ? 1'b1:1'b0;
+	assign SP = SPA;
+	
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPD<= SPC;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPD <= SPD;
+		end
+		else begin
+			SPD <= SPD;
+		end
+	end
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPC<= SPB;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPC <= SPD;
+		end
+		else begin
+			SPC <= SPC;
+		end
+	end
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPB<= SPA;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPB<= SPC;
+		end
+		else begin
+			SPB<= SPB;
+		end
+	end
+
+always @(posedge STK_CLK)begin
+		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
+			SPA <=PC;
+		end
+		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
+			SPA<= SPB;
+		end
+		else begin
+			SPA<= SPA;
+		end
+	end
+endmodule*/
