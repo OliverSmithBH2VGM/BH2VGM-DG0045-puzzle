@@ -17,12 +17,12 @@ module tt_um_BH2VGM_DG0045(
 	output wire[7:0] uio_oe// bit 0 means input ; bit 1 means output
 );
 
-	reg [7:0] mem [0:63];
+	reg [3:0] mem [0:63];
  
 always @(posedge clk)
 begin
 	if(ena || rst_n)begin
-		mem [uio_in[5:0]] <= ui_in;
+		mem [uio_in[5:0]] <= ui_in[3:0] | ui_in[7:4];
 	end
 	else
 		begin
@@ -30,7 +30,8 @@ begin
 		end
 end
 
-assign   uo_out = mem [uio_in[5:0]] ;
+	assign   uo_out[3:0] = mem [uio_in[5:0]] ;
+	assign   uo_out[7:4] = ~mem [uio_in[5:0]] ;
 assign 	 uio_out = ~uio_in;
 assign 	uio_oe= uio_in ^ ui_in;
 	
