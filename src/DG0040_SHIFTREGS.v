@@ -11,29 +11,17 @@ output wire PL1NXR0
 	reg[9:0] SPB;
 	reg[9:0] SPC;
 	reg[9:0] SPD;
-	reg[9:0] SPE;
 	
 	assign PL1NXR0 = (PC[0]==PC[1]) ? 1'b1:1'b0;
 	assign SP = SPA;
 	
-	always @(posedge STK_CLK)begin
-		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
-			SPE<= SPD;
-		end
-		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
-			SPE<= SPE;
-		end
-		else begin
-			SPE<=SPE;
-		end
-	end
 
 always @(posedge STK_CLK)begin
 		if((MODE1== 1'b1)&&( MODE0==1'b0)) begin
 			SPD<= SPC;
 		end
 		else if((MODE1==1'b1 )&&( MODE0==1'b1)) begin	
-			SPD <= SPE;
+			SPD <= SPD;
 		end
 		else begin
 			SPD <= SPD;
