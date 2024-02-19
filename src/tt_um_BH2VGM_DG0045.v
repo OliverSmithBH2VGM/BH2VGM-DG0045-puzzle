@@ -71,7 +71,7 @@ reg[7:0] nowCMD;
 
 //	assign RC=(nowCMD == 8'b00000010)?1'b1:1'b0;
 // 	assign SC=(nowCMD == 8'b00000011)?1'b1:1'b0;
-	assign RSC = (nowCMD[7:1] == 8'b0000001)?1'b1:1'b0;
+	assign RSC = (nowCMD[7:1] == 7'b0000001)?1'b1:1'b0;
 	
  	assign RMP = (nowCMD[7:2] == 6'b000001)?1'b1:1'b0;
   	assign KTA=(nowCMD == 8'b00001000)?1'b1:1'b0;
