@@ -134,13 +134,14 @@ assign 	LastSSP=(lastCMD[3:0] == 4'b0111)?1'b1:1'b0;
 wire RESET;
 	assign RESET = rst_n;
 wire clk_in;
-	assign clk_in = clk & ena;
+	assign clk_in = clk;
 wire CLKF1,CLKF2;
 reg[2:0] clock_divider;
 
 always@(posedge clk_in or negedge RESET)begin
 	if(RESET == 1'b0)begin clock_divider <=3'b000; end
-	else begin clock_divider <= clock_divider + 3'b001; end
+	else if(ena==1'b1) begin clock_divider <= clock_divider + 3'b001; end
+	else begin clock_divider <= clock_divider; end 
 end
 
 assign CLKF1 = (clock_divider[2:1] == 2'b01)? 1'b1:1'b0;
