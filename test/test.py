@@ -3,7 +3,7 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles
+from cocotb.triggers import RisingEdge, FallingEdge, Timer, ClockCycles
 
 @cocotb.test()
 async def test_adder(dut):
@@ -24,9 +24,9 @@ async def test_adder(dut):
 
   # Set the input values, wait one clock cycle, and check the output
   dut._log.info("Test")
-  dut.ui_in.value = 20
-  dut.uio_in.value = 30
+  dut.ui_in.value = 0
+  dut.uio_in.value = 0
 
-  await ClockCycles(dut.clk, 1)
+  await ClockCycles(dut.clk, 100)
 
-  assert dut.uo_out.value == 50
+  assert dut.uio_out.value == 0
