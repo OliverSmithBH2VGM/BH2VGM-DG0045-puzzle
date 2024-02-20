@@ -16,9 +16,11 @@ module tt_um_BH2VGM_DG0045(
 	output wire[7:0] uio_out,// nL outs at uio_out[7:6]
 	output wire[7:0] uio_oe// bit 0 means input ; bit 1 means output
 );
-	wire[2:0] uio_void;
-	assign uio_void = {uio_in[7:6],uio_in[4]};
-	
+	reg[2:0] uio_void;
+	always@(posedge F2)
+		begin 
+			uio_void <= {uio_in[7:6],uio_in[4]};
+		end
 wire[3:0] KIN; //input 
 	assign KIN = uio_in[3:0];
 
@@ -28,6 +30,8 @@ wire PC_MUX; //input
 wire[3:0] nL; //output 
 wire ND; //output 
 wire[4:0] PC_HL; //output 
+	
+	assign PC_HL = PC_MUX? {PU,PL[5]}:PL[4:0];
 	assign uo_out = {nL[2],nL[3],ND,PC_HL[4:0]};
 	assign uio_out = {nL[0],nL[1],3'b000,uio_void};
 
@@ -249,7 +253,6 @@ always @(posedge PC_CLK or negedge RESET)begin
 end 
 
 
-assign PC_HL = PC_MUX? {PU,PL[5]}:PL[4:0];
 
 //----------------
 reg[3:0] ACC;
