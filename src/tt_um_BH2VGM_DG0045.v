@@ -167,7 +167,7 @@ assign F2 = CLKF2 & CLKEN;
 always @(negedge F1 or negedge RESET)
 if(RESET==1'b0)begin
 	nowCMD <= 8'b00000000;
-	lastCMD <= 4'b0000;
+	lastCMD <= 6'b000000;
 end
 else begin
 	//nowCMD <= ROMmask & mainROM ;
@@ -387,16 +387,16 @@ always @(posedge F2 or negedge RESET)begin
 			{BU,BL}<={BU,(BL + 4'b0001)};
 		end
 		else if(( LB==1'b1)&&(LastLB==1'b0))begin
-			if(nowCMD[4:2]==2'b000)begin
+			if(nowCMD[4:2]==3'b000)begin
 				{BU,BL}<={nowCMD[1:0],4'b0000};
 			end
-			else if(nowCMD[4:2]==2'b001)begin
+			else if(nowCMD[4:2]==3'b001)begin
 					begin {BU,BL}<={nowCMD[1:0],4'b1101}; end
 			end
-			else if(nowCMD[4:2]==2'b010)begin
+			else if(nowCMD[4:2]==3'b010)begin
 					begin {BU,BL}<={nowCMD[1:0],4'b1110}; end
 			end
-			else if(nowCMD[4:2]==2'b011)begin
+			else if(nowCMD[4:2]==3'b011)begin
 					begin {BU,BL}<={nowCMD[1:0],4'b1111}; end
 			end
 			else begin
