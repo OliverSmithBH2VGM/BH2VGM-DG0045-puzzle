@@ -16,11 +16,9 @@ module tt_um_BH2VGM_DG0045(
 	output wire[7:0] uio_out,// nL outs at uio_out[7:6]
 	output wire[7:0] uio_oe// bit 0 means input ; bit 1 means output
 );
-	reg[2:0] uio_void;
-	always@(posedge F2)
-		begin 
-			uio_void <= {uio_in[7:6],uio_in[4]};
-		end
+	wire[2:0] uio_void;
+	assign uio_void = {uio_in[7:6],uio_in[4]};
+	
 wire[3:0] KIN; //input 
 	assign KIN = uio_in[3:0];
 
@@ -30,8 +28,6 @@ wire PC_MUX; //input
 wire[3:0] nL; //output 
 wire ND; //output 
 wire[4:0] PC_HL; //output 
-	
-	assign PC_HL = PC_MUX? {PU,PL[5]}:PL[4:0];
 	assign uo_out = {nL[2],nL[3],ND,PC_HL[4:0]};
 	assign uio_out = {nL[0],nL[1],3'b000,uio_void};
 
@@ -47,9 +43,9 @@ wire RMP;wire KTA;wire TC;
 
 wire CADCSC;wire ADD;wire ADC;wire ADT;wire TAM;
 wire EXC;
-//wire EXCI;
+wire EXCI;
 wire LDA;
-//wire EXCD;
+wire EXCD;
 wire LAM;
 wire SKZ;
 wire ADX;wire DAA;
@@ -88,17 +84,17 @@ reg[7:0] nowCMD;
   	assign ADT=(nowCMD == 8'b00001111)?1'b1:1'b0;
 
   	assign EXC=(nowCMD[7:3] == 5'b00010)?1'b1:1'b0;
-//  	assign EXCI=(nowCMD[7:2] == 6'b000101)?1'b1:1'b0;
+  	assign EXCI=(nowCMD[7:2] == 6'b000101)?1'b1:1'b0;
  	assign LDA =(nowCMD[7:3] == 5'b00011)?1'b1:1'b0;
-// 	assign EXCD= (nowCMD[7:2] == 6'b000111)?1'b1:1'b0;
+ 	assign EXCD= (nowCMD[7:2] == 6'b000111)?1'b1:1'b0;
 
   	assign LAM=(nowCMD[7:4] == 4'b0010)?1'b1:1'b0;
  	assign SKZ=(nowCMD == 8'b00110000)?1'b1:1'b0;
  	assign DAA= (nowCMD == 8'b00110110)?1'b1:1'b0;
  	assign ADX= ((nowCMD[7:4] == 4'b0011)&&(nowCMD[3:0]!=4'b0000)&&(nowCMD[3:0]!=4'b0110))?1'b1:1'b0;
 
-// 	assign  LB = ((nowCMD[7:4] == 4'b0100)||(nowCMD[7:2] == 6'b010100) ) ?1'b1:1'b0;
- 	assign  LB = (nowCMD[7:4] == 4'b0100) ?1'b1:1'b0;
+ 	assign  LB = ((nowCMD[7:4] == 4'b0100)||(nowCMD[7:2] == 6'b010100) ) ?1'b1:1'b0;
+// 	assign  LB = (nowCMD[7:4] == 4'b0100) ?1'b1:1'b0;
 
  	assign INCB= (nowCMD == 8'b01010100) ?1'b1:1'b0;
 //  	assign RZ=(nowCMD == 8'b01010101) ?1'b1:1'b0;
@@ -125,10 +121,10 @@ reg[7:0] nowCMD;
  	assign JMP= (nowCMD[7:6] == 2'b10) ?1'b1:1'b0;
  	assign CALL= (nowCMD[7:6] == 2'b11) ?1'b1:1'b0;
 
-assign 	LastLAM=(lastCMD[3:0] == 4'b0010)?1'b1:1'b0;
-//assign 	LastLB=((lastCMD[5:2] == 4'b0100)||(lastCMD[5:0] == 6'b010100))?1'b1:1'b0;
-assign 	LastLB=(lastCMD[3:0] == 4'b0100)?1'b1:1'b0;
-assign 	LastSSP=(lastCMD[3:0] == 4'b0111)?1'b1:1'b0;
+assign 	LastLAM=(lastCMD[5:2] == 4'b0010)?1'b1:1'b0;
+assign 	LastLB=((lastCMD[5:2] == 4'b0100)||(lastCMD[5:0] == 6'b010100))?1'b1:1'b0;
+//assign 	LastLB=(lastCMD[3:0] == 4'b0100)?1'b1:1'b0;
+assign 	LastSSP=(lastCMD[5:2] == 4'b0111)?1'b1:1'b0;
 
 
 wire RESET;
@@ -141,7 +137,7 @@ reg[2:0] clock_divider;
 always@(posedge clk_in or negedge RESET)begin
 	if(RESET == 1'b0)begin clock_divider <=3'b000; end
 	else if(ena==1'b1) begin clock_divider <= clock_divider + 3'b001; end
-	else begin clock_divider <= clock_divider; end 
+	else begin clock_divider <= clock_divider; end
 end
 
 assign CLKF1 = (clock_divider[2:1] == 2'b01)? 1'b1:1'b0;
@@ -166,7 +162,7 @@ assign F2 = CLKF2 & CLKEN;
 //		assign ROMout0 = nowCMD[0];
 //		assign ROMout2 = nowCMD[2];
 
-	reg[3:0] lastCMD;
+	reg[5:0] lastCMD;
 
 always @(negedge F1 or negedge RESET)
 if(RESET==1'b0)begin
@@ -176,7 +172,7 @@ end
 else begin
 	//nowCMD <= ROMmask & mainROM ;
 	nowCMD <= NRF?  mainROM : 8'b00000000 ;
-	lastCMD <= nowCMD[7:4];
+	lastCMD <= nowCMD[7:2];
 end
 
 //----------------
@@ -254,6 +250,7 @@ always @(posedge PC_CLK or negedge RESET)begin
 end 
 
 
+assign PC_HL = PC_MUX? {PU,PL[5]}:PL[4:0];
 
 //----------------
 reg[3:0] ACC;
@@ -280,9 +277,9 @@ assign RAM_WR_CMD =(
 ((LAM==1'b1) && (LastLAM==1'b1)) ||
 (SMP ==1'b1)||
 ( RMP==1'b1)||
-( EXC==1'b1)/*||
+( EXC==1'b1)||
 ( EXCI==1'b1)||
-( EXCD==1'b1)*/
+( EXCD==1'b1)
 ) 
 ? 1'b1: 1'b0;
 // ACC groups
@@ -297,8 +294,8 @@ always @(posedge F2 or negedge RESET)
 begin
 	if(RESET == 1'b0) begin ACC<=4'b0000; end
 	else  begin
-		//if(( LDA==1'b1)||( EXC==1'b1)||( EXCI==1'b1)||(  EXCD==1'b1)) 
-		if(( LDA==1'b1)||( EXC==1'b1)) 
+		if(( LDA==1'b1)||( EXC==1'b1)||( EXCI==1'b1)||(  EXCD==1'b1)) 
+		//if(( LDA==1'b1)||( EXC==1'b1)) 
 			begin ACC<=RAMtoA; end
 		else if(( ADC==1'b1)||( ADD==1'b1)||( CADCSC==1'b1)||( ADT==1'b1)||( ADX==1'b1)) 
 			begin ACC<=ALU_OUT; end
@@ -362,45 +359,48 @@ assign CD4555_decode = (nowCMD[1:0]==2'b00)? 4'b0001:(nowCMD[1:0]==2'b01)? 4'b00
 assign AtoRAM=(RMP==1'b1)? (RAMtoA & (~CD4555_decode) ) :(SMP==1'b1)? (RAMtoA | CD4555_decode ) :(LAM==1'b1)? nowCMD[3:0] : ACC ;
 
 // RAM groups
-reg[2:0] BL;
+reg[3:0] BL;
 reg[1:0] BU;
 
 
 always @(posedge F2 or negedge RESET)begin
 	if(RESET==1'b0)begin
-		{BU,BL} <= 5'b00000;
+		{BU,BL} <= 6'b000000;
 	end
 	else begin
 		if((( EXC==1'b1) || ( LDA==1'b1)))begin
 			{BU,BL}<={(BU ^ nowCMD[1:0]),BL};
 		end
-		//else if(( EXCI==1'b1))begin
-		//	{BU,BL}<={(BU ^ nowCMD[1:0]),(BL + 3'b001)};
-		//end
-		//else if(( EXCD==1'b1))begin
-		//	{BU,BL}<={(BU ^ nowCMD[1:0]),(BL + 3'b111)};
-		//end
+		else if(( EXCI==1'b1))begin
+			{BU,BL}<={(BU ^ nowCMD[1:0]),(BL + 4'b0001)};
+		end
+		else if(( EXCD==1'b1))begin
+			{BU,BL}<={(BU ^ nowCMD[1:0]),(BL + 4'b1111)};
+		end
 		else if(( INCB==1'b1))begin
-			{BU,BL}<={BU,(BL + 3'b001)};
+			{BU,BL}<={BU,(BL + 4'b0001)};
 		end
 		else if(( DECB==1'b1))begin
-			{BU,BL}<={BU,(BL + 3'b111)};
+			{BU,BL}<={BU,(BL + 4'b1111)};
 		end
 		else if((( LAM==1'b1)&&(LastLAM==1'b1)))begin
-			{BU,BL}<={BU,(BL + 3'b001)};
+			{BU,BL}<={BU,(BL + 4'b0001)};
 		end
 		else if(( LB==1'b1)&&(LastLB==1'b0))begin
-			if(nowCMD[3:2]==2'b00)begin
-				{BU,BL}<={nowCMD[1:0],3'b000};
+			if(nowCMD[4:2]==2'b000)begin
+				{BU,BL}<={nowCMD[1:0],4'b0000};
 			end
-			else if(nowCMD[3:2]==2'b01)begin
-					begin {BU,BL}<={nowCMD[1:0],3'b101}; end
+			else if(nowCMD[4:2]==2'b001)begin
+					begin {BU,BL}<={nowCMD[1:0],4'b1101}; end
 			end
-			else if(nowCMD[3:2]==2'b10)begin
-					begin {BU,BL}<={nowCMD[1:0],3'b110}; end
+			else if(nowCMD[4:2]==2'b010)begin
+					begin {BU,BL}<={nowCMD[1:0],4'b1110}; end
+			end
+			else if(nowCMD[4:2]==2'b011)begin
+					begin {BU,BL}<={nowCMD[1:0],4'b1111}; end
 			end
 			else begin
-				{BU,BL}<={nowCMD[1:0],3'b111};
+				{BU,BL}<={nowCMD[1:0],4'b1100};
 			end
 		end
 		else begin
@@ -409,10 +409,10 @@ always @(posedge F2 or negedge RESET)begin
 	end
 end
 
-reg[2:0] LastBL;
+reg[3:0] LastBL;
 always @(posedge F2 or negedge RESET)begin
 	if(RESET==1'b0)begin
-		LastBL <= 3'b000;
+		LastBL <= 4'b0000;
 	end
 	else begin
 		LastBL <= BL;
@@ -423,7 +423,7 @@ end
 wire RAM_WR;
 assign RAM_WR = F2 & RAM_WR_CMD;
 
-DG0045_RAM_128bit DG0040_MY_RAM
+DG0045_RAM_256bit DG0040_MY_RAM
 (
 .addr({BU,BL}),
 .din(AtoRAM),
@@ -438,10 +438,10 @@ assign NRF = (
 (( CADCSC==1'b1)&&(CC==1'b1)) ||
 (( TAM==1'b1)&&(ACC==RAMtoA)) ||
 (( ADT==1'b1)&&(CC==1'b0)) ||
-//(( EXCI==1'b1)&&(LastBL==4'b1011)) ||
-//(( EXCD==1'b1)&&(LastBL==4'b0000)) ||
-(( INCB==1'b1)&&(LastBL==3'b101)) ||
-(( DECB==1'b1)&&(LastBL==3'b000)) ||
+(( EXCI==1'b1)&&(LastBL==4'b1011)) ||
+(( EXCD==1'b1)&&(LastBL==4'b0000)) ||
+(( INCB==1'b1)&&(LastBL==4'b1011)) ||
+(( DECB==1'b1)&&(LastBL==4'b0000)) ||
 (( SKZ==1'b1)&&(Zreg==1'b1)) ||
 (( ADX==1'b1)&&(CC2==1'b0)) ||
 (( SKMP==1'b1)&&(nowCMD[1:0]==2'b00)&&(RAMtoA[0]==1'b1)) ||
@@ -494,14 +494,14 @@ assign nL = ~Lreg;
 endmodule
 
 /*
-module DG0045_RAM_128bit(
+module DG0045_RAM_256bit(
            input   wire RAM_clk  ,
-           input   wire[4:0] addr ,
+           input   wire[5:0] addr ,
            input   wire[3:0]din  ,
            output wire[3:0]dout
           );
  
-reg [3:0] mem [0:31];
+reg [3:0] mem [0:63];
  
 always @(posedge RAM_clk)
 begin
@@ -599,4 +599,5 @@ always @(posedge STK_CLK)begin
 			SPA<= SPA;
 		end
 	end
-endmodule*/
+endmodule
+*/
